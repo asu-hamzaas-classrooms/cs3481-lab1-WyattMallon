@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "Tools.h"
 
-static int doVerbose = 0;
+static int doVerbose = 1;
 static int doExit = 0;
 
 //assert is a builtin macro.
@@ -35,6 +35,8 @@ static int getByteTests();
 static int getBitsTests();
 static int setBitsTests();
 static int clearBitsTests();
+static int copyBitsTests();
+static int setByteTests();
 static int signTests();
 static int addOverflowTests();
 static int subOverflowTests();
@@ -67,35 +69,43 @@ int main(int argc, char * argv[])
 
    int pass; 
    pass = buildLongTests();
-   std::cout << "buildLong tests:" << check[pass] << "\n";
+   std::cout << "buildLong tests " << check[pass] << "\n";
    funsPassed += pass;
    
    pass = getByteTests();
-   std::cout << "getByte tests:" << check[pass] << "\n";
+   std::cout << "getByte tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = getBitsTests();
-   std::cout << "getBits tests:" << check[pass] << "\n";
+   std::cout << "getBits tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = setBitsTests();
-   std::cout << "setBits tests:" << check[pass] << "\n";
+   std::cout << "setBits tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = clearBitsTests();
-   std::cout << "clearBits tests:" << check[pass] << "\n";
+   std::cout << "clearBits tests " << check[pass] << "\n";
+   funsPassed += pass;
+
+   pass = copyBitsTests();
+   std::cout << "copyBits tests " << check[pass] << "\n";
+   funsPassed += pass;
+
+   pass = setByteTests();
+   std::cout << "setByte tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = signTests();
-   std::cout << "sign tests:" << check[pass] << "\n";
+   std::cout << "sign tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = addOverflowTests();
-   std::cout << "addOverflow tests:" << check[pass] << "\n";
+   std::cout << "addOverflow tests " << check[pass] << "\n";
    funsPassed += pass;
 
    pass = subOverflowTests();
-   std::cout << "subOverflow tests:" << check[pass] << "\n";
+   std::cout << "subOverflow tests " << check[pass] << "\n";
    funsPassed += pass;
 
    std::cout << "\n" << std::dec << funsPassed << " functions out of a total of " << numFuns
@@ -349,6 +359,22 @@ int clearBitsTests()
    return pass;
 }
 
+int copyBitsTests()
+{
+	int pass;
+	pass = myAssert(Tools::copyBits(0x1122334455667788, 0x8877665544332211, 0, 0, 8), 0x8877665544332288);
+	pass &= myAssert(Tools::copyBits(0x1122334455667788, 0x8877665544332211, 0, 8, 8), 0x8877665544338811);
+	return pass;
+}
+
+int setByteTests()
+{
+	int pass;
+	pass = myAssert(Tools::setByte(0x1122334455667788, 0), 0x11223344556677ff);
+	pass &= myAssert(Tools::setByte(0x1122334455667788, 1), 0x112233445566ff88);
+	pass &= myAssert(Tools::setByte(0x1122334455667788, 8), 0x1122334455667788);
+	return pass;
+}
 /**
  * tests the sign method in the Tools class
  *
