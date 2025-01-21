@@ -167,7 +167,7 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 	if ((low < 0) || (high > 63) || (low > high)) {
 		return source;
 	}
-	return ( ~(getBits(0xFFFFFFFFFFFFFFFF, low, high) << low)) & source;
+	return (~(getBits(0xFFFFFFFFFFFFFFFF, low, high) << low)) & source;
 }
 
 
@@ -198,7 +198,12 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0; 
+	int32_t srchigh = srclow + length - 1;
+	int32_t dsthigh = dstlow + length - 1;
+	if ((srchigh > 63) || (dsthigh > 63)) {
+		return dest;
+	}
+	return ((getBits(source, srclow, srchigh) << srclow) << dstlow) | clearBits(dest, dstlow, dsthigh);
 }
 
 
