@@ -74,7 +74,7 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 	if ((byteNum > 7) || (byteNum < 0)) {
 		return 0;
 	}
-	return (source >> (byteNum * 8)) & 0x000000FF;
+	return (source >> (byteNum * 8)) & 0xFF;
 }
 
 /**
@@ -136,7 +136,10 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+	if ((low < 0) || (high > 63) || (low > high)) {
+		return source;
+	}
+	return (getBits(0xFFFFFFFFFFFFFFFF, low, high) << low) | source;
 }
 
 /**
