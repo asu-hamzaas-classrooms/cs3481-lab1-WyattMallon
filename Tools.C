@@ -200,7 +200,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
 {
 	int32_t srchigh = srclow + length - 1;
 	int32_t dsthigh = dstlow + length - 1;
-	if ((srchigh > 63) || (dsthigh > 63)) {
+	if ((srchigh > 63) || (dsthigh > 63) || (srclow < 0) || (dstlow < 0)) {
 		return dest;
 	}
 	return ((getBits(source, srclow, srchigh) << srclow) << dstlow) | clearBits(dest, dstlow, dsthigh);
@@ -228,7 +228,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-  return 0;
+	return setBits(source, byteNum * 8, ((byteNum + 1) * 8) - 1);
 }
 
 
